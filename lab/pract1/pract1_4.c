@@ -6,7 +6,8 @@ que la entrada no ha sido correcta
 */
 
 #include <stdio.h>
-#define es_correcta(h,m) (h >= 0 && h <= 23 && m >= 0 && m <= 59
+// variante con macros
+// #define es_correcta(h,m) (h >= 0 && h <= 23 && m >= 0 && m <= 59
 
     int main() {
     int h1, m1, h2, m2, min1, min2, diff;

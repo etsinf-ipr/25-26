@@ -19,19 +19,16 @@ int main() {
     printf("Introduce la segunda hora (HH:MM): ");
     scanf("%d:%d", &h2, &m2);
 
-    int min1 = h1 * 60 + m1; // Convertir la primera hora a minutos
-    int min2 = h2 * 60 + m2; // Convertir la segunda hora a minutos
+    // convierte las horas completas en minutos para simplificar el bucle
+    int min1 = h1 * 60 + m1; 
+    int min2 = h2 * 60 + m2; 
 
     // Imprimir la secuencia de minutos
     for (int m = min1; m <= min2; m++) {
-        // Convertir minutos de vuelta a formato HH:MM 
+        // Convertir minutos de vuelta a formato HH:MM para mostrarlos
         // La división entera da las horas y el resto los minutos
         // Ej: 150 min = 2h 30m -> 150/60 = 2, 150%60 = 30
         printf("%02d:%02d\n", m / 60, m % 60);
-    }
-
-    return 0;
-}
     }
 
     return 0;
