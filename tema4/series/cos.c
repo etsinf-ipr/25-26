@@ -3,9 +3,10 @@
  * 
  * El valor de cos(x) puede aproximarse por la fórmula:
  * cos(x) = 1 – x²/2! + x⁴/4! - ... 
- * Consigue un error menor que el valor que se le pasa como parámetro.
+ * Escribe un programa en C que reciba por línea de comandos
+ * un número y el número de términos, y calcule el coseno
  * 
- * Ejemplo: ./cos 1.5 0.001
+ * Ejemplo: ./cos 1.5 10
  */
 
 #include <stdio.h>
@@ -14,34 +15,24 @@
 
 int main(int argc, char *argv[]) {
     if (argc != 3) {
-        printf("Uso: %s <x> <error>\n", argv[0]);
+        printf("Uso: %s <numero> <n_terminos>\n", argv[0]);
         return 1;
     }
     // obtiene los parámetros de la línea de comandos
     double x = atof(argv[1]);
-    double error = atof(argv[2]);
-    
-    double anterior = -2; // -1 < cos(x) < 1, para que entre en el bucle
-    double actual = 1;  // primer término: 1
-    int n = 0;  // exponente
-    
-    // repite mientras el valor absoluto del término
-    // sea mayor que el error permitido
-    double termino = 1;
-    printf("Término %d: %.10f, Suma: %.10f\n", n, termino, actual);
+    int n_terminos = atoi(argv[2]);
+    double resultado = 1.0;  // primer término: 1
+    double termino = 1.0;
 
-    while(fabs(actual - anterior) > error) {
-        anterior = actual;    
-        // calcular el siguiente término
-        // siguiente exponente par (2, 4, 6, ...)
-        n += 2;  
-        // calcular el siguiente término
-        termino = -termino * x * x / ((n-1) * n);  // cambio de signo y multiplicación
-        actual += termino;
+    // bucle para el número de términos indicado
+    for (int i = 1; i < n_terminos; i++) {
+        // calcular el siguiente término: -x²/2!, +x⁴/4!, etc.
+        termino = -termino * x * x / ((2*i-1) * (2*i));
+        resultado += termino;
         // comentar para eliminar los valores intermedios
-        printf("Término %d: %.10f, Suma: %.10f\n", n, termino, actual);
+        printf("x: %.5f\n", resultado);
     }
-    
-    printf("cos(%.2f) ≈ %.10f\n", x, actual);
+
+    printf("Coseno de %.2f: %.5f\n", x, resultado);
     return 0;
 }

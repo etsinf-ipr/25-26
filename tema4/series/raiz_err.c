@@ -3,10 +3,9 @@
  * 
  * La raíz cuadrada de un número puede aproximarse por el método de Newton que 
  * sigue esta fórmula: xn+1 = 1/2 (xn + (2 / xn)). 
- * Escribe un programa en C que reciba por línea de comandos
- * un número y el número de términos, y calcule la raíz cuadrada
+ * Consigue un error menor que el valor que se le pasa como parámetro.
  * 
- * Ejemplo: ./raiz 12 10
+ * Ejemplo: ./raiz 12 0.001
  */
 
 #include <stdio.h>
@@ -15,17 +14,20 @@
 
 int main(int argc, char *argv[]) {
     if (argc != 3) {
-        printf("Uso: %s <numero> <n_terminos>\n", argv[0]);
+        printf("Uso: %s <numero> <error>\n", argv[0]);
         return 1;
     }
     // obtiene los parámetros de la línea de comandos
     double numero = atof(argv[1]);
-    int n_terminos = atoi(argv[2]);
+    double error = atof(argv[2]);
     double x = 1;
+    double x_ant = 0;
 
-    // bucle para el número de términos indicado
-    for (int i = 0; i < n_terminos; i++) {
-        x = 0.5 * (x + (numero / x));
+    // repite mientras la diferencia entre dos iteraciones
+    // sea mayor que el error permitido
+    while(fabs(x - x_ant) > error ) {
+        x_ant = x;
+        x = 0.5 * (x_ant + (numero / x_ant));
         // comentar para eliminar los valores intermedios
         printf("x: %.5f\n", x);
     }

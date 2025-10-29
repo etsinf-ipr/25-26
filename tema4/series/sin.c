@@ -3,9 +3,10 @@
  * 
  * El valor de sen(x) puede aproximarse por la fórmula:
  * sen(x) = x – x³/3! + x⁵/5! - ... 
- * Consigue un error menor que el valor que se le pasa como parámetro.
+ * Escribe un programa en C que reciba por línea de comandos
+ * un número y el número de términos, y calcule el seno
  * 
- * Ejemplo: ./sen 1.5 0.001
+ * Ejemplo: ./sin 1.5 10
  */
 
 #include <stdio.h>
@@ -14,34 +15,24 @@
 
 int main(int argc, char *argv[]) {
     if (argc != 3) {
-        printf("Uso: %s <x> <error>\n", argv[0]);
+        printf("Uso: %s <numero> <n_terminos>\n", argv[0]);
         return 1;
     }
     // obtiene los parámetros de la línea de comandos
     double x = atof(argv[1]);
-    double error = atof(argv[2]);
-    
-    double anterior = -2; // -1 < sen(x) < 1, para 
-    double actual = x;  // primer término: x
-    int n = 1;  // exponente
-    
-    // repite mientras el valor absoluto del término
-    // sea mayor que el error permitido
+    int n_terminos = atoi(argv[2]);
+    double resultado = x;  // primer término: x
     double termino = x;
-    printf("Término %d: %.10f, Suma: %.10f\n", n, termino, actual);
 
-    while(fabs(actual - anterior) > error) {
-        anterior = actual;    
-        // calcular el siguiente término
-        // siguiente exponente impar (3, 5, 7, ...)
-        n += 2;  
-        // calcular el siguiente término
-        termino = -termino * x * x / ((n-1) * n);  // cambio de signo y multiplicación
-        actual += termino;
+    // bucle para el número de términos indicado
+    for (int i = 1; i < n_terminos; i++) {
+        // calcular el siguiente término: -x³/3!, +x⁵/5!, etc.
+        termino = -termino * x * x / ((2*i) * (2*i+1));
+        resultado += termino;
         // comentar para eliminar los valores intermedios
-        printf("Término %d: %.10f, Suma: %.10f\n", n, termino, actual);
+        printf("x: %.5f\n", resultado);
     }
-    
-    printf("sen(%.2f) ≈ %.10f\n", x, actual);
+
+    printf("Seno de %.2f: %.5f\n", x, resultado);
     return 0;
 }
