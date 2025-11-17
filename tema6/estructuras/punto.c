@@ -53,11 +53,11 @@ double angulo(struct punto p1, struct punto p2) {
 }
 
 int main() {
-    struct punto p;;
+    struct punto p;
     
     // Entrada de datos para el primer punto
     printf("Introduce las coordenadas del primer punto (x y): ");
-    scanf("%lf %lf", &p.x, &p.y);
+    scanf("%g%g", &p.x, &p.y);
 
     muestra(p);
     printf("Módulo: %.2f\n", modulo(p));
@@ -65,7 +65,7 @@ int main() {
     struct punto q;
     // Entrada de datos para el segundo punto
     printf("Introduce las coordenadas del segundo punto (x y): ");
-    scanf("%lf %lf", &q.x, &q.y);
+    scanf("%g%g", &q.x, &q.y);
     printf("Producto escalar: %.2f\n", escalar(p, q));
     printf("Distancia entre los puntos: %.2f\n", distancia(p, q));
     printf("Ángulo entre los puntos: %.2f rad\n", angulo(p, q));
