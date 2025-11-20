@@ -19,7 +19,7 @@ void imprimir_doc (struct nif a){
 
 char calcular_letra (int num_dni){
     int resto;
-    // equivalente, mejor la segunda opción
+    // equivalentes, mejor la segunda opción
     char letra_dni[23] = {'T', 'R', 'W', 'A', 'G', 'M', 'Y', 'F', 'P', 'D', 'X', 'B', 'N', 'J', 'Z', 'S', 'Q', 'V', 'H', 'L', 'C', 'K', 'E'};
     char letradni[23] = "TRWAGMYFPDXBNJZSQVHLCKE";
     resto = num_dni%23;
@@ -55,23 +55,13 @@ int main() {
     completar_dni(&doc);
     // imprimir el nif completo
     imprimir_doc(doc);
-
-    printf("Introduzca su número de DNI:");
-    int num;
-    // pedir un nif completo
-    scanf("%d",&num);
+        
     struct nif doc2;
-    doc2 = obtener_letra(num);
-    imprimir_doc(doc2);
-    
-    // comprobar si es correcto
-    
-    struct nif doc3;
-    printf("Introduce un dni en foramto 99999999-X: ");
-    scanf("%d-%c",&(doc3.num),&(doc3.letra));
-    if (es_correcto(doc3) == 1) //(es_correcto(doc3)==1)
+    printf("Introduce un dni en formato 99999999-X: ");
+    scanf("%d-%c",&(doc2.num),&(doc2.letra));
+    if (es_correcto(doc2) == 1) //(es_correcto(doc3)==1)
         printf("El DNI es correcto\n");
     else 
-        printf("El DNI no es correcto. Inténtelo otra vez.");
+        printf("El DNI no es correcto.");
     
 }
