@@ -10,6 +10,15 @@ el robot en cada instante de tiempo, una en cada línea, separadas por comas
 usa una estructura para guardar la información del robot
 implementa girar y avanzar como funciones
 implementa un movimiento aleatorio
+
+Para visualizar el recorrido, puedes lanzar el robot con
+
+$./roomba > out.txt
+
+para que genere un fichero out.txt con las posiciones y luego mostrar un gráfico
+con esos datos (solo en linux)
+
+$gnuplot -persist -e "plot 'out.txt' with lines"
 */
 
 #include <stdio.h>
