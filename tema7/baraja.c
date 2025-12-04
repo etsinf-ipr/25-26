@@ -35,11 +35,14 @@ void crear (carta baraja[]) {
     */
 }
 
-/* 
-    Este es un método que tiene bias y no todas las combinaciones son igual de probables
-    Cambiarlo por el algoritmo de Fisher-Yates si se quiere un barajado perfecto.
-*/
-void barajar (carta baraja[]) {
+void swap (carta *a, carta *b) {
+    carta temp = *a;
+    *a = *b;
+    *b = temp;
+}
+
+
+void barajar(carta baraja[]) {
     // inicializa la semilla para los números aleatorios
     // solo se hace una vez en toda la partida y aquí queda oculto
     // si se baraja varias veces, hay que sacarlo al main()
@@ -52,7 +55,20 @@ void barajar (carta baraja[]) {
         carta temp = baraja[pos1];
         baraja[pos1] = baraja[pos2];
         baraja[pos2] = temp;
-        // SUGERENCIA: implementa una función swap() que intercambie dos cartas
+    }
+}
+
+// algoritmo de barajado: fisher-yates (Knuth)
+// https://es.wikipedia.org/wiki/Algoritmo_de_Fisher-Yates
+void barajar_yates (carta baraja[]) {
+    // inicializa la semilla para los números aleatorios
+    // solo se hace una vez en toda la partida y aquí queda oculto
+    // si se baraja varias veces, hay que sacarlo al main()
+    srand(time(NULL)); 
+    for(int i=39; i>0; i--) {
+        // elige una posición aleatoria entre 0 e i
+        int j = rand() % (i + 1); // puede ser i y quedarse donde está
+        swap(&baraja[i], &baraja[j]);
     }
 }
 
@@ -77,8 +93,11 @@ int main(){
 
     crear(baraja);
     imprimir(baraja);
-    barajar(baraja);
-    imprimir(baraja);
 
+    carta baraja2[40];
+    barajar_yates(baraja2);
+    imprimir(baraja2);
+
+    
     return 0;
 }
