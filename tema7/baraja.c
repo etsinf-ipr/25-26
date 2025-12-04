@@ -21,7 +21,7 @@ void crear (carta baraja[]) {
         // usa la misma estrategia del reloj con horas / minutos
         baraja[i].palo = i / 10; // cada 10 cartas cambia de palo 
         baraja[i].valor = (i % 10) + 1; // valores del 1 al 10
-        baraja[i].puntos = baraja[i].valor > 7 ? 0.7 : baraja[i].valor;
+        baraja[i].puntos = baraja[i].valor > 7 ? 0.5 : baraja[i].valor;
     }
     /* alternativa con dos bucles anidados 
     for (int palo = OROS; palo <= BASTOS; palo++) {
@@ -73,11 +73,11 @@ void barajar_yates (carta baraja[]) {
 }
 
 
-void imprimir (carta baraja[]) {
+void imprimir (carta baraja[], int num_cartas) {
     // misma estrategia que para la letra del NIF
     const char nompalo[] ="OCEB"; // nombres cortos de los palos
     const char nomcarta[] = " A234567JQK"; // nombres cortos de las cartas 
-    for(int i=0; i<40; i++) {
+    for(int i=0; i<num_cartas; i++) {
         int palo = baraja[i].palo;
         int valor = baraja[i].valor;
         // se puede hacer todo en una línea, pero para mayor claridad se separa
@@ -86,18 +86,43 @@ void imprimir (carta baraja[]) {
     printf("\n");
 }
 
+void repartir (carta b[], carta m[], int cartas_m, int *cartas_b ) {
+    int j = *cartas_b - 1;
+    for(int i = 0; i < cartas_m; i++){
+        m[i] = b[j];
+        j--;
+    }
+    *cartas_b -= cartas_m;
+}
 
 
 int main(){
     carta baraja[40];
-
+    int ncartas = 40;
     crear(baraja);
-    imprimir(baraja);
-
-    carta baraja2[40];
-    barajar_yates(baraja2);
-    imprimir(baraja2);
-
+    imprimir(baraja, ncartas);
+    barajar_yates(baraja);
+    imprimir(baraja, ncartas);
+    carta jug1[1], jug2[1];
+    int seguir;
+    float puntos1 = 0;  
+    do{
+        repartir(baraja, jug1, 1, &ncartas);
+        puntos1 += jug1[0].puntos;
+        imprimir(jug1, 1);
+        printf("puntos: %f - otra (si= 0; no = 1)? ", puntos);
+        scanf("%d", &seguir);
+    }while(seguir == 0 && puntos1 <= 7.5);
     
+    float puntos2 = 0;
+    do{
+        repartir(baraja, jug2, 1, &ncartas);
+        puntos2 += jug2[0].puntos;
+        imprimir(jug2, 1);
+        printf("puntos: %f - otra (si= 0; no = 1)? ", puntos);
+        scanf("%d", &seguir);
+    }while(seguir == 0 && puntos2 <= 7.5);
+
+    // comprueba quién ha ganado
     return 0;
 }
