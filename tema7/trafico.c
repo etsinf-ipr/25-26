@@ -5,7 +5,7 @@
 
 #define N 10    
 #define TURNOS 20
-#define OUT    -N   
+#define OUT    999  
 #define VACIO      '.'
 #define CARRETERAH '-'
 #define CARRETERAV '|'
@@ -39,27 +39,19 @@ int main() {
     // Inicializar mapa y coche
     srand(time(NULL));
     inicializar_mapa(mapa_base);
-    // TODO: inicializar la posición y dirección del coche
     nuevo_coche(&coche);
 
     // Bucle principal de la simulación
     for (int turno = 0; turno < TURNOS; turno++) {
-        // TODO: limpiar o actualizar mapa si es necesario
         restaurar_mapa(mapa, mapa_base);
-        // TODO: mover el coche
         mover_coche(mapa, &coche);
-        // TODO: colocar el coche en el mapa
         situar_coche(mapa, &coche);
-        // Mostrar el mapa
         imprimir_mapa(mapa);
-
-        // TODO: cualquier otro paso del turno
     }
 
     return 0;
 }
 
-// TODO: implementar inicialización del mapa
 void inicializar_mapa(char mapa[][N]) {
     // rellenar con VACIO y CARRETERA
     for (int i = 0; i < N; i++) {
@@ -103,7 +95,6 @@ void situar_coche(char mapa[][N], Coche *coche) {
     }
 }
 
-// TODO: implementar impresión del mapa
 void imprimir_mapa(char mapa[][N]) {
     // imprimir el grid por pantalla
     for (int i = 0; i < N; i++) {
@@ -117,7 +108,6 @@ void imprimir_mapa(char mapa[][N]) {
     printf("\n");
 }
 
-// TODO: implementar movimiento del coche
 void mover_coche(char mapa[][N], Coche *coche) {
     // actualizar fila/col según la dirección y reglas
     int df[] = {-1, 0, 1,  0}; // cambios en fila    para ARRIBA, DERECHA, ABAJO, IZQUIERDA
@@ -134,7 +124,8 @@ void mover_coche(char mapa[][N], Coche *coche) {
     }
 }
 
-// las funciones inline son recomendables para funciones pequeñas y muy usadas
+// las funciones inline se recomiendan para funciones pequeñas y muy usadas
+// seria equivalente a una macro con #define pero con comprobación de tipos
 inline bool dentro_mapa(Coche *coche) {
     return (coche->fila >= 0 && coche->fila < N && coche->col >= 0 && coche->col < N);
 }
