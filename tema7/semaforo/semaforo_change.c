@@ -1,6 +1,7 @@
 /*
-    version inicial:
-    semáforos con dos colores, en modo texto y ANSI
+    extensión sobre la base
+    cada semaforo tiene un indicador de cambio reciente
+    para que los vecinos puedan reaccionar
 */
 
 #include <stdio.h>
@@ -28,6 +29,7 @@ typedef struct {
     int estado;         // color actual
     int base;           // tiempo base para el cambio de estado
     int temporizador;   // tiempo restante para el cambio de estado
+    int cambio;         // indicador de cambio reciente
 } semaforo_t;
 
 // ---------------------------
@@ -45,17 +47,23 @@ semaforo_t crear_semaforo() {
     s.estado = ROJO;  // todos empiezan en rojo
     s.base = set_base();
     s.temporizador = s.base;
+    s.cambio = 0;
     return s;
 }
 
 
 void step(semaforo_t *s) {
     s->temporizador--;
+    s->cambio = 0;
     if (s->temporizador < 0) {
         s->estado = (s->estado == ROJO) ? VERDE : ROJO;
         s->temporizador = s->base;
+        s->cambio = 1;  // marcar cambio
     }
 }
+
+
+
 
 
 // ---------------------------

@@ -1,6 +1,7 @@
 /*
-    version inicial:
-    semáforos con dos colores, en modo texto y ANSI
+    version sonre view:
+    atracción más fuerte hacia los vecinos que cambian
+    modificación fija en lugar de factor multiplicativo
 */
 
 #include <stdio.h>
@@ -28,6 +29,7 @@ typedef struct {
     int estado;         // color actual
     int base;           // tiempo base para el cambio de estado
     int temporizador;   // tiempo restante para el cambio de estado
+    int cambio;         // indicador de cambio reciente
 } semaforo_t;
 
 // ---------------------------
@@ -40,20 +42,29 @@ int set_base() {
 }
 
 
+void ajusta_base(semaforo_t *s, float factor) {
+    s->base = (int)(s->base + factor);
+    if (s->base < T_MIN) s->base = T_MIN;
+}
+
+
 semaforo_t crear_semaforo() {
     semaforo_t s;
     s.estado = ROJO;  // todos empiezan en rojo
     s.base = set_base();
     s.temporizador = s.base;
+    s.cambio = 0;
     return s;
 }
 
 
 void step(semaforo_t *s) {
     s->temporizador--;
+    s->cambio = 0;
     if (s->temporizador < 0) {
         s->estado = (s->estado == ROJO) ? VERDE : ROJO;
         s->temporizador = s->base;
+        s->cambio = 1;  // marcar cambio
     }
 }
 
@@ -61,6 +72,18 @@ void step(semaforo_t *s) {
 // ---------------------------
 // CALLE
 // ---------------------------
+
+
+
+/* Ajustar el semáforo con los vecinos */
+void ajustar(semaforo_t calle[], int i) {
+    step(&calle[i]);
+    /* si algun vecino ha cambiado me acelero un poco */
+    if ((i > 0 && calle[i - 1].cambio) ||
+        (i < NUM_SEMAFOROS - 1 && calle[i + 1].cambio)) {
+        ajusta_base(&calle[i], -1);  // acelerar un 10%
+    }
+}
 
 /* Inicialización caótica */
 void inicializar_semaforos(semaforo_t calle[], int n) {
@@ -86,7 +109,7 @@ void imprimir_calleC(semaforo_t calle[], int n) {
             default:
                 printf("?");
         }
-        step(&calle[i]);
+        ajustar(calle, i);
     }
     printf("---");
     fflush(stdout);
@@ -104,7 +127,7 @@ void imprimir_calle(semaforo_t calle[], int n) {
             default:       c = '?';
         }
         printf("[%c:%2d] ", c, calle[i].temporizador);
-        step(&calle[i]);
+        ajustar(calle, i);
     }
     fflush(stdout);
 }
