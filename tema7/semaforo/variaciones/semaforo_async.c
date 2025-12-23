@@ -1,9 +1,7 @@
 /*
- modificaciones respecto attr:
- - solo comunico cambios cuando me pongo en verde
- - solo adapto ni base si detecto cambios estando en rojo
- modelo de semáforo tipo luciérnagas
- */
+    version inicial:
+    semáforos independientes con dos colores, en modo texto y ANSI
+*/
 
 #include <stdio.h>
 #include <stdlib.h>
@@ -11,10 +9,9 @@
 #include <unistd.h>   // para usleep (Linux/macOS)
 
 /* Configuración */
-#define NUM_SEMAFOROS 60
+#define NUM_SEMAFOROS 10
 #define T_MIN 1
-#define T_MAX 15
-#define SEPARADOR ""
+#define T_MAX 10
 
 /* Estados posibles */
 #define ROJO 0
@@ -29,9 +26,8 @@
 
 typedef struct {
     int estado;         // color actual
-    float base;           // tiempo base para el cambio de estado
+    int base;           // tiempo base para el cambio de estado
     int temporizador;   // tiempo restante para el cambio de estado
-    int cambio;         // indicador de cambio reciente
 } semaforo_t;
 
 // ---------------------------
@@ -39,37 +35,25 @@ typedef struct {
 // ---------------------------
 
 
-float set_base() {
+int set_base() {
     return T_MIN + rand() % (T_MAX - T_MIN + 1);
-}
-
-
-void ajusta_base(semaforo_t *s, float factor) {
-    s->base = s->base + factor;
-    //s->base = (int)(s->base * factor);
-    if (s->base < T_MIN) s->base = T_MIN;
 }
 
 
 semaforo_t crear_semaforo() {
     semaforo_t s;
-    s.estado = ROJO;
+    s.estado = ROJO;  // todos empiezan en rojo
     s.base = set_base();
     s.temporizador = s.base;
-    s.cambio = 0;
     return s;
 }
 
 
 void step(semaforo_t *s) {
     s->temporizador--;
-    s->cambio = 0;
     if (s->temporizador < 0) {
         s->estado = (s->estado == ROJO) ? VERDE : ROJO;
         s->temporizador = s->base;
-        // marcar cambio solo en verde
-        if (s->estado == VERDE)
-            s->cambio = 1;
     }
 }
 
@@ -77,21 +61,6 @@ void step(semaforo_t *s) {
 // ---------------------------
 // CALLE
 // ---------------------------
-
-
-
-/* Ajustar el semáforo con los vecinos */
-void ajustar(semaforo_t calle[], int i) {
-    step(&calle[i]);
-    // solo proceso cambios estando en rojo
-    if (calle[i].estado == VERDE) return;
-    /* si algun vecino ha cambiado me acelero un poco */
-    if ((i > 0 && calle[i - 1].cambio) ||
-        (i < NUM_SEMAFOROS - 1 && calle[i + 1].cambio)) {
-        ajusta_base(&calle[i], -0.5);  
-    }
-}
-
 
 /* Inicialización caótica */
 void inicializar_semaforos(semaforo_t calle[], int n) {
@@ -106,7 +75,7 @@ void inicializar_semaforos(semaforo_t calle[], int n) {
 void imprimir_calleC(semaforo_t calle[], int n) {
     printf("\r");  // volver al inicio de la línea
     for (int i = 0; i < n; i++) {
-        printf(SEPARADOR);
+        printf("---");
         switch (calle[i].estado) {
             case ROJO:
                 printf(COLOR_ROJO "●" COLOR_RESET);
@@ -117,9 +86,9 @@ void imprimir_calleC(semaforo_t calle[], int n) {
             default:
                 printf("?");
         }
-        ajustar(calle, i);
+        step(&calle[i]);
     }
-    printf(SEPARADOR);
+    printf("---");
     fflush(stdout);
 }
 
@@ -135,7 +104,7 @@ void imprimir_calle(semaforo_t calle[], int n) {
             default:       c = '?';
         }
         printf("[%c:%2d] ", c, calle[i].temporizador);
-        ajustar(calle, i);
+        step(&calle[i]);
     }
     fflush(stdout);
 }
@@ -149,6 +118,9 @@ int main() {
     /* Bucle principal de simulación (solo visualización por ahora) */
     printf("[Ctrl]+C para salir\n\n");
     while (1) {
+        // imprime la calla en modo texto
+        //imprimir_calle(calle, NUM_SEMAFOROS);
+        //imprime la  calle n modo gráfico
         imprimir_calleC(calle, NUM_SEMAFOROS);
         usleep(300000);  // 0.3 segundos
     }
