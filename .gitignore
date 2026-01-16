@@ -35,6 +35,8 @@
 *.i*86
 *.x86_64
 *.hex
+* # linux/mac execubales without extension
+
 
 # Debug files
 *.dSYM/
